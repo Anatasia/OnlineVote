@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xj.dao.VoteSubjectMapper" >
+    <resultMap id="BaseResultMap" type="com.xj.pojo.VoteSubject">
+        <result column="vsid" property="vsid" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="stype" property="stype" jdbcType="INTEGER" />
+        <result column="usercount" property="usercount" jdbcType="INTEGER" />
+        <result column="optioncount" property="optioncount" jdbcType="INTEGER" />
+    </resultMap>
+
+    <resultMap id="VoteOption" type="com.xj.pojo.VoteOption">
+        <result column="voteid" property="voteid" jdbcType="INTEGER" />
+        <result column="voteoption" property="voteoption" jdbcType="VARCHAR" />
+        <result column="vsid" property="vsid" jdbcType="INTEGER" />
+        <result column="voteorder" property="voteorder" jdbcType="INTEGER" />
+        <result column="votecount" property="votecount" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="getVoteSubjectList" resultType="com.xj.pojo.VoteSubject">
+        SELECT a.vsid,a.title,a.stype,a.usercount,ifnull(b.optioncount,0) as optioncount
+        FROM
+            (SELECT votesubject.vsid, votesubject.title, votesubject.stype, count(DISTINCT (uid)) as usercount
+            FROM voteitem RIGHT JOIN votesubject ON voteitem.vsid=votesubject.vsid
+            GROUP BY voteitem.vsid,votesubject.title) a
+          LEFT JOIN (
+            SELECT votesubject.vsid,count(*) as optioncount from votesubject inner join voteoption on voteoption.vsid=votesubject.vsid
+	group by votesubject.vsid
+          ) b ON a.vsid = b.vsid
+    </select>
+
+    <!-- 通过vsid查找 voteoption-->
+    <select id="findOptionsByVsid" parameterType="Integer" resultType="com.xj.pojo.VoteOption">
+        SELECT voteid, voteoption, vsid, voteOrder FROM voteoption WHERE vsid = #{vsid}
+    </select>
+
+    <!-- 通过vsid查找 voteoption包括选项个数-->
+    <select id="findOptionsByVsidAndVoteCount" parameterType="Integer" resultType="com.xj.pojo.VoteOption">
+        SELECT voteoption.voteid, voteoption,voteoption.vsid,voteorder, COUNT(DISTINCT voteitem.uid) as votecount from voteoption, voteitem WHERE voteoption.vsid = #{vsid} and voteoption.vsid = voteitem.vsid and voteoption.voteid = voteitem.voteid GROUP BY voteoption.voteid
+    </select>
+
+    <select id="findVoteSubjectByVsid" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT votesubject.vsid, title, stype, COUNT(DISTINCT voteitem.uid) as usercount, COUNT(DISTINCT voteoption.voteid) as optioncount FROM votesubject,voteitem,voteoption WHERE votesubject.vsid=voteitem.vsid and votesubject.vsid=#{vsid} and votesubject.vsid=voteoption.vsid
+    </select>
+
+    <!-- 将投票结果存入数据库 -->
+    <insert id="insertVoteResult" parameterType="com.xj.pojo.VoteItem">
+        INSERT INTO  voteitem(voteid,vsid,uid) VALUES (#{voteid},#{vsid},#{uid})
+    </insert>
+
+    <!-- 将新增的投票信息添加到数据库 -->
+    <insert id="addToTableVoteSubject" parameterType="com.xj.pojo.VoteSubject">
+        INSERT INTO votesubject(title,stype) VALUES(#{title},#{stype})
+    </insert>
+    <select id="getVsid" parameterType="com.xj.pojo.VoteSubject" resultType="Integer">
+        SELECT vsid FROM votesubject WHERE title=#{title} and stype=#{stype}
+    </select>
+    <insert id="addToTableVoteOption" parameterType="java.util.List">
+        INSERT INTO voteoption(voteoption,vsid,voteorder) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.voteoption},#{item.vsid},#{item.voteorder})
+        </foreach>
+    </insert>
+
+</mapper>
