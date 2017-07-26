@@ -1,5 +1,6 @@
 package com.xj.base;
 
+import com.xj.common.Constants;
 import com.xj.common.DateEditor;
 import com.xj.pojo.VoteUser;
 import org.apache.log4j.Logger;
@@ -15,16 +16,16 @@ import java.util.Date;
  */
 public class BaseController {
     private Logger logger = Logger.getLogger(BaseController.class);
-    public final static String SESSION_USER = "user";
+
     @Autowired
     private HttpServletRequest request;
 
     public void setSessionUser(VoteUser user){
-        request.getSession(true).setAttribute(SESSION_USER, user);
+        request.getSession(true).setAttribute(Constants.SESSION_USER, user);
     }
 
     public VoteUser getSessionUser(){
-        return (VoteUser) request.getSession().getAttribute(SESSION_USER);
+        return (VoteUser) request.getSession().getAttribute(Constants.SESSION_USER);
     }
 
     public void setRequestAttr(String key, Object value){

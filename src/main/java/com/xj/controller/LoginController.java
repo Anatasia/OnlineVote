@@ -45,7 +45,7 @@ public class LoginController extends BaseController{
                 result.setMsg("账户密码错误");
             }else{
                 setSessionUser(voteUser);
-                setCookieUser(uname, pwd, true,response);
+                //setCookieUser(uname, pwd, true,response);
             }
 
         }catch(Exception e){
@@ -73,24 +73,39 @@ public class LoginController extends BaseController{
         return result;
     }
 
-    public void setCookieUser(String userName, String password, boolean remberPwd, HttpServletResponse response) {
-        // 将用户名密码保存在cookie中
-        if (remberPwd) {
-            Cookie cookieUser = new Cookie("cookie_user", userName + "-" + password);
-            // 设定有效时间 以秒(s)为单位
-            cookieUser.setMaxAge(2 * 60 * 60);
-            // 设置Cookie路径和域名
-            cookieUser.setPath("/");
-            response.addCookie(cookieUser);
-        } else {
-            Cookie cookieUser = new Cookie("cookie_user", null);
-            // 设定有效时间 以秒(s)为单位
-            cookieUser.setMaxAge(0);
-            // 设置Cookie路径和域名
-            cookieUser.setPath("/");
-            response.addCookie(cookieUser);
+    //退出登录
+    @RequestMapping(value = "/login_out", method = {RequestMethod.POST})
+    @ResponseBody
+    public AjaxResult loginOut(HttpServletRequest request){
+        AjaxResult result = new AjaxResult(1);
+        try{
+            loginService.loginOut(request);
+        }catch (Exception e){
+            result.setCode(-1);
+            logger.info(e.toString());
+            result.setMsg(e.toString());
         }
+        return result;
     }
+
+//    public void setCookieUser(String userName, String password, boolean remberPwd, HttpServletResponse response) {
+//        // 将用户名密码保存在cookie中
+//        if (remberPwd) {
+//            Cookie cookieUser = new Cookie("cookie_user", userName + "-" + password);
+//            // 设定有效时间 以秒(s)为单位
+//            cookieUser.setMaxAge(2 * 60 * 60);
+//            // 设置Cookie路径和域名
+//            cookieUser.setPath("/");
+//            response.addCookie(cookieUser);
+//        } else {
+//            Cookie cookieUser = new Cookie("cookie_user", null);
+//            // 设定有效时间 以秒(s)为单位
+//            cookieUser.setMaxAge(0);
+//            // 设置Cookie路径和域名
+//            cookieUser.setPath("/");
+//            response.addCookie(cookieUser);
+//        }
+//    }
 
 }
 

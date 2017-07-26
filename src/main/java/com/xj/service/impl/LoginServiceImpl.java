@@ -1,5 +1,6 @@
 package com.xj.service.impl;
 
+import com.xj.common.Constants;
 import com.xj.dao.VoteUserMapper;
 import com.xj.pojo.VoteUser;
 import com.xj.service.LoginService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by xujuan1 on 2017/7/19.
@@ -53,6 +55,13 @@ public class LoginServiceImpl implements LoginService {
         }finally {
             return res;
         }
+    }
+
+    @Override
+    public void loginOut(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        VoteUser user = (VoteUser) session.getAttribute(Constants.SESSION_USER);
+        session.removeAttribute(Constants.SESSION_USER);
     }
 
 }

@@ -19,9 +19,9 @@ public interface VoteService {
     public VoteSubject findVoteSubjectByVsid(int vsid);
 
     //更新投票结果
-    void insertVoteItem(HttpServletRequest request);
+    int insertVoteItem(HttpServletRequest request);
     VoteSubject findVoteOptionInfo(HttpServletRequest request);
 
     //添加新的投票
-    void addNewVoteSubject(HttpServletRequest request);
+    int addNewVoteSubject(HttpServletRequest request);
 }

@@ -10,4 +10,5 @@ import javax.servlet.http.HttpServletRequest;
 public interface LoginService {
     VoteUser verifyUser(VoteUser user);
     String register(HttpServletRequest request);
+    void loginOut(HttpServletRequest request);
 }

@@ -2,6 +2,8 @@ package com.xj.controller;
 
 import com.xj.base.BaseController;
 import com.xj.common.AjaxResult;
+import com.xj.common.Constants;
+import com.xj.common.ResultCodeEnum;
 import com.xj.pojo.VoteItem;
 import com.xj.pojo.VoteSubject;
 import com.xj.pojo.VoteUser;
@@ -75,7 +77,11 @@ public class VoteController extends BaseController{
     public AjaxResult voteOption(HttpServletRequest request){
         AjaxResult result = new AjaxResult(1);
         try{
-            voteService.insertVoteItem(request);
+            int voteResult = voteService.insertVoteItem(request);
+            if(voteResult!=ResultCodeEnum.VOTE_SUCCESS.value()){
+                result.setCode(-1);
+            }
+            result.setMsg(ResultCodeEnum.resultCodeDesc.get(voteResult));
         }catch (Exception e){
             result.setCode(-1);
             logger.info(e.getStackTrace());
@@ -108,7 +114,11 @@ public class VoteController extends BaseController{
         AjaxResult result = new AjaxResult(1);
         try{
             logger.info("deal with /vote/voteSubject_add");
-            voteService.addNewVoteSubject(request);
+            int insertRes = voteService.addNewVoteSubject(request);
+            if(insertRes!=ResultCodeEnum.INSERT_NEWVOTEINFO_SUCCESS.value()){
+                result.setMsg(ResultCodeEnum.resultCodeDesc.get(insertRes));
+                result.setCode(-1);
+            }
         }catch (Exception e){
             result.setCode(-1);
             logger.info(e.getMessage());

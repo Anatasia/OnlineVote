@@ -200,6 +200,11 @@
           <artifactId>mmseg4j-analysis</artifactId>
           <version>1.9.0</version>
       </dependency>
+      <dependency>
+          <groupId>org.apache.lucene</groupId>
+          <artifactId>lucene-core</artifactId>
+          <version>5.4.1</version>
+      </dependency>
   </dependencies>
   <build>
     <finalName>vote</finalName>

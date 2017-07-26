@@ -16,9 +16,14 @@ public interface VoteSubjectMapper {
     List<VoteOption> findOptionsByVsid(int vsid);
     List<VoteOption> findOptionsByVsidAndVoteCount(int vsid);
     VoteSubject findVoteSubjectByVsid(int vsid);
-    void insertVoteResult(VoteItem item);
+    int insertVoteResult(List<VoteItem> item);
     //将新增的投票信息加入数据库
-    void addToTableVoteSubject(VoteSubject vs);
+    int addToTableVoteSubject(VoteSubject vs);
     int getVsid(VoteSubject vs);
-    void addToTableVoteOption(List<VoteOption> list);
+    int addToTableVoteOption(List<VoteOption> list);
+    //查询用户投票信息
+    int findUserVoteInfoByVsid(VoteItem item);
+    int findVoteOptionCount(int vsid);
+    //删除投票信息
+    int deleteVoteSubjectByVsid(int vsid);
 }

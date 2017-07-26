@@ -40,13 +40,26 @@
     </select>
 
     <select id="findVoteSubjectByVsid" parameterType="Integer" resultMap="BaseResultMap">
-        SELECT votesubject.vsid, title, stype, COUNT(DISTINCT voteitem.uid) as usercount, COUNT(DISTINCT voteoption.voteid) as optioncount FROM votesubject,voteitem,voteoption WHERE votesubject.vsid=voteitem.vsid and votesubject.vsid=#{vsid} and votesubject.vsid=voteoption.vsid
+        SELECT votesubject.vsid, title, stype, COUNT(DISTINCT voteitem.uid) as usercount FROM votesubject,voteitem WHERE votesubject.vsid=voteitem.vsid and votesubject.vsid=#{vsid}
+    </select>
+
+    <!--通过vsid查询选项个数-->
+    <select id="findVoteOptionCount" parameterType="Integer" resultType="Integer">
+        SELECT count(DISTINCT voteid) FROM voteoption where vsid = #{vsid}
     </select>
 
     <!-- 将投票结果存入数据库 -->
-    <insert id="insertVoteResult" parameterType="com.xj.pojo.VoteItem">
-        INSERT INTO  voteitem(voteid,vsid,uid) VALUES (#{voteid},#{vsid},#{uid})
+    <insert id="insertVoteResult" parameterType="java.util.List">
+        INSERT INTO  voteitem(voteid,vsid,uid) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.voteid},#{item.vsid},#{item.uid})
+        </foreach>
+
     </insert>
+    <!--查询用户投票信息-->
+    <select id="findUserVoteInfoByVsid" parameterType="com.xj.pojo.VoteItem" resultType="Integer">
+        SELECT COUNT(*) FROM voteitem WHERE vsid=#{vsid} and uid=#{uid}
+    </select>
 
     <!-- 将新增的投票信息添加到数据库 -->
     <insert id="addToTableVoteSubject" parameterType="com.xj.pojo.VoteSubject">
@@ -62,4 +75,8 @@
         </foreach>
     </insert>
 
+    <!--通过vsid删除投票信息-->
+    <delete id="deleteVoteSubjectByVsid" parameterType="Integer">
+        DELETE FROM votesubject WHERE vsid=#{vsid}
+    </delete>
 </mapper>
