@@ -24,8 +24,20 @@ public enum ResultCodeEnum {
     COMFIRMPWD_NULL(306),
     PWD_NOT_EQUAL_WITH_CONFIRMPWD(307),
 
+
+
+    //登录操作结果码
+    LOGIN_SUCCESS(401),
+    LOGIN_FAILD(402),
+
     //数据库操作失败
-    INTERNEL_ERROR(500);
+    INTERNEL_ERROR(500),
+
+    //用户管理
+    GRANT_SUCCESS(601),
+    GRANT_FAILD(602),
+    REVOKE_SUCCESS(603),
+    REVOKE_FAILD(604)
     ;
 
 
@@ -46,6 +58,12 @@ public enum ResultCodeEnum {
         resultCodeDesc.put(COMFIRMPWD_NULL.value(),"确认密码为空");
         resultCodeDesc.put(PWD_NOT_EQUAL_WITH_CONFIRMPWD.value,"密码不一致");
         resultCodeDesc.put(INTERNEL_ERROR.value,"内部错误");
+        resultCodeDesc.put(LOGIN_SUCCESS.value(),"登录成功");
+        resultCodeDesc.put(LOGIN_FAILD.value(),"用户名密码错误");
+        resultCodeDesc.put(GRANT_SUCCESS.value(),"授权成功");
+        resultCodeDesc.put(GRANT_FAILD.value(),"授权失败");
+        resultCodeDesc.put(REVOKE_SUCCESS.value,"降级成功");
+        resultCodeDesc.put(REVOKE_FAILD.value,"降级失败");
     }
 
     ResultCodeEnum(Integer value){

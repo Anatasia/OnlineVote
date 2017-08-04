@@ -65,3 +65,5 @@ insert into voteoption values(0009,'Chengdu',003,3);
 insert into voteitem values(1,1,1,1);
 insert into voteitem values(3,3,3,3);
 insert into voteitem values(2,2,2,2);
+
+

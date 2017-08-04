@@ -53,6 +53,6 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>/login.html</welcome-file>
+        <welcome-file>/manage.html</welcome-file>
     </welcome-file-list>
 </web-app>

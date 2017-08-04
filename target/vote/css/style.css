@@ -43,7 +43,7 @@ a:hover, a:active { text-decoration:underline; }
 #newVoteList ul li { background:url(../images/quote_left.gif) left center no-repeat; padding-left:20px; }
 #newVoteList ul li a { color:#666; background:url(../images/quote_right.gif) right center no-repeat; padding-right:20px; }
 #newVoteList ul li .time { float:right; font-size:10px; color:#999; }
-#footer { border-top:1px solid #79a4cf; margin-top:30px; text-align:center; line-height:30px; color:#666; }
+#footer { border-top:1px solid #79a4cf; margin-top:30px; text-align:center; line-height:30px; color:#666; clear:both;}
 #register { width:600px; margin:20px auto; }
 #register dl { line-height:40px; }
 #register dl dt { float:left; clear:left; width:80px; text-align:right; }
@@ -81,3 +81,24 @@ a:hover, a:active { text-decoration:underline; }
 #voteManage dl dd .del { font-size:12px; margin:0px 5px; }
 #voteManage dl dd.button img { vertical-align:middle; }
 #voteManage dl dd.button a { margin:0px 10px; }
+
+#voteinfo .votelist li { border-top:1px solid #e4e4e4; padding:10px; overflow:hidden;}
+#userinfo .userlist li { border-top:1px solid #e4e4e4; padding:10px;overflow:hidden; }
+.operations { text-align:left; }
+
+#votelist .operations button{width:28px;height:12px;margin:2px;padding: 10px;}
+
+.wrap_maintain{width:800px;background:#fc0;overflow:hidden;margin-top:40px;}
+#voteinfo{width:380px;float:left;margin-right:20px;}
+#userinfo{width:380px;float:right;}
+.sub_l{
+    width:290px;
+    float:left;
+}
+.sub_r{
+    width:60px;
+    float:right;
+    margin-top:20px;
+}
+
+#votelist .voteoption{margin-left:12px;}

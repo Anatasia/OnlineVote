@@ -6,6 +6,21 @@
 <link type="text/css" rel="stylesheet" href="css/style.css" />
 <script src="js/jquery.min.js"></script>
 <script type="text/javascript">
+    function loginout(){
+        $.ajax({
+            type:"post",
+            url:"/login/loginout.do",
+            dataType:"json",
+            success:function(data){
+                if(data.code==1){
+                    //alert("退出成功");
+                    location.href="login.html";
+                }else{
+                    alert("退出失败");
+                }
+            }
+        });
+    }
 	$(function(){
 		//取出地址栏中的参数，主题编号
 		var href= location.href;
@@ -31,11 +46,17 @@
 	
 	$.ajax({
 		type:"post",
-		url:"/vote/voteSubject_getLoginUser.do",
+		url:"/login/voteSubject_getLoginUser.do",
 		dataType:"json",
 		success:function(data){
 			if(data.code ==1){
 				$("#loginuser").html(data.obj.uname);
+                if(data.obj.utype==10){
+                    $("#right_control").html('	<span class="addnew"><a href="add.html">添加新投票</a></span>');
+                }else if(data.obj.utype==1){
+                    $("#right_control").html('	<span class="addnew"><a href="add.html">添加新投票</a></span>'
+                            +'<span class="modify"><a href="maintain.html">维护</a></span>');
+                }
 		}else{
 			alert("您还没有登录！");
 			location.href="login.html";
@@ -53,8 +74,8 @@
 			if(data.code ==1){
 				data=data.obj;   //votesubject 里面包括vsid，title,usercount,optioncount(选项数),options
 				$("#title").html(data.title);
-				$("#optioncount").html(data.optioncount);
-				$("#usercount").html(data.usercount);
+				$("#optioncount").html(data.optionCount);
+				$("#usercount").html(data.userCount);
 				$("#vsid").val(data.vsid);
 				
 				$("#view").attr("href","view.html?"+params);
@@ -86,9 +107,9 @@
 <div id="navbar" class="wrap">
 	<div class="profile">
 		您好，<span id="loginuser"></span>
+        <button type="button"  value="loginout" onclick="loginout()">注销</button>
 		<span class="return"><a href="manage.html">返回列表</a></span>
-		<span class="addnew"><a href="add.html">添加新投票</a></span>
-		<!--<span class="modify"><a href="Subject!modify.action">维护</a></span>-->
+        <span id="right_control"></span>
 
 	</div>
 	<div class="search">

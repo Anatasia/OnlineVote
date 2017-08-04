@@ -1,5 +1,6 @@
 package com.xj.votetest.service;
 
+import com.xj.votetest.pojo.VoteUser;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,4 +11,5 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public interface LoginService {
     int register(HttpServletRequest request);
+    VoteUser login(HttpServletRequest request);
 }

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统管理</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript">
+        function deletesubject(vsid){
+            $.ajax({
+                type:"post",
+                url:"/maintain/deleteSubject.do",
+                data:{vsid:vsid},
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        alert("删除成功");
+                        location.href="maintain.html";
+                    }else{
+                        alert("删除失败");
+                    }
+                }
+            });
+        }
+        function expire(vsid){
+            $.ajax({
+                type:"post",
+                url:"/maintain/expireSubject.do",
+                data:{vsid:vsid,state:0},
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        alert("设置成功");
+                        location.href="maintain.html";
+                    }else{
+                        alert("设置失败");
+                    }
+                }
+            });
+        }
+
+        function activesubject(vsid){
+            $.ajax({
+                type:"post",
+                url:"/maintain/activeSubject.do",
+                data:{vsid:vsid,state:1},
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        alert("设置成功");
+                        location.href="maintain.html";
+                    }else{
+                        alert("设置失败");
+                    }
+                }
+            });
+        }
+
+        function deleteuser(uid){
+            $.ajax({
+                type:"post",
+                url:"/maintain/deleteUser.do",
+                data:{uid:uid},
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        alert("删除成功");
+                        location.href="maintain.html";
+                    }else{
+                        alert("删除失败");
+                    }
+                }
+            });
+        }
+
+        function grantuser(uid){
+            $.ajax({
+                type:"post",
+                url:"/maintain/grantUser.do",
+                data:{uid:uid},
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        alert("授权成功");
+                        location.href="maintain.html";
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+        function revokeuser(uid){
+            $.ajax({
+                type:"post",
+                url:"/maintain/revokeUser.do",
+                data:{uid:uid},
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        alert("用户降级成功");
+                        location.href="maintain.html";
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+
+        function loginout(){
+            $.ajax({
+                type:"post",
+                url:"/login/loginout.do",
+                dataType:"json",
+                success:function(data){
+                    if(data.code==1){
+                        //alert("退出成功");
+                        location.href="login.html";
+                    }else{
+                        alert("退出失败");
+                    }
+                }
+            });
+        }
+
+        $(function(){
+            $.ajax({
+                type:"post",
+                url:"/maintain/voteSubject_getLoginUser.do",
+                dataType:"json",
+                success:function(data){
+                    if(data.code ==1){
+                        $("#loginuser").html(data.obj.uname);
+                    }else{
+                        alert("您还没有相关权限！");
+                        location.href="manage.html";
+                    }
+                }
+            });
+
+            $.ajax({
+                type:"post",
+                url:"/maintain/voteUser_findAll.do",
+                dataType:"json",
+                success:function(data){
+                    if(data.code== 1){
+                        $("#userlist").html("");
+                        var str = "";
+                        $(data.obj).each(function(index,item){
+                            str += "<li ";
+                            if(index%2 ==0){
+                                str +='class="odd"';
+                            }
+                            str+='><div class="sub_l"><h3>用户名：'+ item.uname+'</h3><div>用户级别：';
+                            if(item.utype > 10 ){
+                                str += '普通用户';
+                            }else{
+                                str += '管理员';
+                            }
+                            str+='</div></div>' +'<div class="sub_r">'
+
+                                    +'<button type="button" value="deleteuser" onclick="deleteuser('+item.uid+')">删除</button>'
+                                    +'<button type="button" value="grantuser" onclick="grantuser('+item.uid+')">升级</button>'
+                                    +'<button type="button" value="revokeuser" onclick="revokeuser('+item.uid+')">降级</button></div></li>';
+
+                        });
+                        $("#userlist").html(str);
+                    }else{
+                        alert("查询失败！原因"+data.msg);
+                    }
+                }
+            });
+
+            $.ajax({
+                type:"post",
+                url:"/maintain/voteSubject_findAll.do",
+                dataType:"json",
+                success:function(data){
+                    if(data.code== 1){
+                        $("#votelist").html("");
+                        var str = "";
+                        $(data.obj).each(function(index,item){
+                            str += "<li ";
+                            if(index%2 ==0){
+                                str +='class="odd"';
+                            }
+                            str+='><div class="sub_l"><h3>主题：'+ item.title+'</h3><div>当前状态：';
+                            if(item.state == 1 ){
+                                str += '正在进行';
+                            }else{
+                                str += '过期';
+                            }
+                            str += '</div><div>选项：';
+                            for(var i=0;i<item.options.length;i++){
+                                str+='<span class="voteoption">'+item.options[i].voteoption+'</span>';
+                            }
+                            str+='</div></div>' +'<div class="sub_r">'
+
+                                    +'<button type="button" value="delete" onclick="deletesubject('+item.vsid+')">删除</button>'
+                                    +'<button type="button" value="active" onclick="activesubject('+item.vsid+')">生效</button>'
+                                    +'<button type="button" value="expire" onclick="expire('+item.vsid+')">失效</button></div></li>';
+                        });
+                        $("#votelist").html(str);
+                    }else{
+                        alert("查询失败！原因"+data.msg);
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="header" class="wrap">
+    <img src="images/logo.gif" />
+</div>
+<div id="navbar" class="wrap">
+    <div class="profile" id="user">
+        您好，<span id="loginuser"></span>
+        <button type="button"  value="loginout" onclick="loginout()">注销</button>
+        <span class="return"><a href="manage.html">返回列表</a></span>
+        <span class="addnew"><a href="add.html">添加新投票</a></span>
+        <span class="modify"><a href="maintain.html">维护</a></span>
+
+    </div>
+    <div class="search">
+        <form method="post" id="searchform" action="search.action">
+            <input type="text" name="keyword" id="keyword" class="input-text" value=""/><input type="button" id="sub" name="sub" class="input-button" value="" />
+        </form>
+    </div>
+</div>
+
+<div id="wrap_maintain" class="wrap">
+    <div id="voteinfo" class="wrap">
+        <h2>投票管理</h2>
+        <ul class="votelist" id="votelist">
+
+        </ul>
+    </div>
+
+    <div id="userinfo" class="wrap">
+        <h2>用户管理</h2>
+        <ul class="userlist" id="userlist">
+
+            <!--<li class="odd">-->
+                <!--<div class="sub_l">-->
+                    <!--<h3>用户名：aa</h3>-->
+                    <!--<div>用户级别：root</div>-->
+                <!--</div>-->
+                <!--<div class="sub_r">-->
+                    <!--<button type="button" value="deleteuser" onclick="deleteuser('aa')">删除</button>-->
+                    <!--<button type="button" value="grantuser" onclick="grantuser('aa')">升级</button>-->
+                    <!--<button type="button" value="revokeuser" onclick="revokeuser('aa')">降级</button>-->
+                <!--</div>-->
+
+            <!--</li>-->
+        </ul>
+    </div>
+
+
+</div>
+<div id="footer" class="wrap">
+    AAA &copy; 版权所有
+</div>
+</body>
+</html>

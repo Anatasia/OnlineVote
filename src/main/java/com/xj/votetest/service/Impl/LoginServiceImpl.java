@@ -1,5 +1,6 @@
 package com.xj.votetest.service.Impl;
 
+import com.xj.votetest.common.Constants;
 import com.xj.votetest.dao.VoteUserMapper;
 import com.xj.votetest.common.InputVerify;
 import com.xj.votetest.pojo.VoteUser;
@@ -17,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class LoginServiceImpl implements LoginService{
     private Logger logger = Logger.getLogger(LoginServiceImpl.class);
-    @Autowired
-    private VoteUser voteUser;
     @Autowired
     private VoteUserMapper voteUserMapper;
 
@@ -42,17 +41,42 @@ public class LoginServiceImpl implements LoginService{
             InputVerify inputVerify = new InputVerify();
             if(inputVerify.hasInjectionData(uname)||inputVerify.hasInjectionData(pwd)) return ResultCodeEnum.MALICIOUS_CODE_FOUND.value();
             logger.info("用户输入验证通过：uname="+uname+" pwd="+pwd+" confirmpwd="+confirmPwd);
+
+            VoteUser voteUser = new VoteUser();
             voteUser.setUname(uname);
             voteUser.setPwd(pwd);
+            voteUser.setUtype(Constants.NORMAL_USER);
             int count = voteUserMapper.addNewUser(voteUser);
             if(count!=1){
                 logger.info("count = "+ count+"  用户添加失败！");
                 res = ResultCodeEnum.INTERNEL_ERROR.value();
             }
         }catch (Exception e){
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             res = ResultCodeEnum.INTERNEL_ERROR.value();
         }
         return res;
+    }
+
+    @Override
+    public VoteUser login(HttpServletRequest request) {
+        logger.info("logining...");
+        VoteUser voteUser = new VoteUser();
+        try {
+            String uname = request.getParameter("uname");
+            String pwd = request.getParameter("pwd");
+            logger.info("uname="+uname+"  pwd="+pwd);
+            if(uname==null||uname.isEmpty()||uname.equals("")) return null;
+            if(pwd==null||pwd.isEmpty()||pwd.equals("")) return null;
+            logger.info("uname="+uname+"  pwd="+pwd);
+
+            voteUser.setUname(uname);
+            voteUser.setPwd(pwd);
+            voteUser  = voteUserMapper.findUserByUnameAndPwd(voteUser);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+        }
+
+        return voteUser;
     }
 }

@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface VoteUserMapper {
     int addNewUser(VoteUser user);
+    VoteUser findUserByUnameAndPwd(VoteUser user);
 }

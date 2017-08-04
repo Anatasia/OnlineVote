@@ -5,14 +5,15 @@
         <result column="uid" property="uid" jdbcType="INTEGER" />
         <result column="uname" property="uname" jdbcType="VARCHAR" />
         <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+        <result column="utype" property="utype" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="findUserByName" parameterType="String" resultMap="VoteUser">
-      SELECT * FROM voteuser where uname=#{uname}
+    <select id="findUserByUnameAndPwd" parameterType="String" resultMap="VoteUser">
+      SELECT * FROM voteuser where uname=#{uname} AND pwd = #{pwd}
     </select>
 
     <!-- 添加新用户 -->
     <insert id="addNewUser" parameterType="com.xj.votetest.pojo.VoteUser">
-        INSERT INTO voteuser(uname,pwd) VALUES (#{uname},#{pwd})
+        INSERT INTO voteuser(uname,pwd,utype) VALUES (#{uname},#{pwd},#{utype})
     </insert>
 </mapper>

@@ -8,6 +8,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class VoteUser {
     String uname;
+    int utype;
+
+    public int getUtype() {
+        return utype;
+    }
+
+    public void setUtype(int utype) {
+        this.utype = utype;
+    }
+
+
 
     public int getUid() {
         return uid;

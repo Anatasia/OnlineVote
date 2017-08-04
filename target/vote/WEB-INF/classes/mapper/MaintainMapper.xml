@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xj.votetest.dao.MaintainMapper">
+    <resultMap id="VoteSubjectResultMap" type="com.xj.votetest.pojo.VoteSubject">
+        <result column="vsid" property="vsid" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="stype" property="stype" jdbcType="INTEGER" />
+        <result column="userCount" property="userCount" jdbcType="INTEGER" />
+        <result column="optionCount" property="optionCount" jdbcType="INTEGER" />
+        <result column="state" property="state" jdbcType="INTEGER" />
+        <result column="uid" property="uid" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="VoteOption" type="com.xj.votetest.pojo.VoteOption">
+        <result column="voteid" property="voteid" jdbcType="INTEGER" />
+        <result column="voteoption" property="voteoption" jdbcType="VARCHAR" />
+        <result column="vsid" property="vsid" jdbcType="INTEGER" />
+        <result column="votecount" property="votecount" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="getVoteSubjects" parameterType="INTEGER" resultMap="VoteSubjectResultMap">
+        SELECT vsid, title, stype, state, uid FROM VoteSubject;
+    </select>
+    <select id="getVoteSubjectsByUid" parameterType="INTEGER" resultMap="VoteSubjectResultMap">
+        SELECT vsid, title, stype, state, uid FROM VoteSubject WHERE uid=#{uid};
+    </select>
+    <select id="getOptionsByVsid" parameterType="INTEGER" resultMap="VoteOption">
+        SELECT voteid, voteoption, vsid FROM VoteOption WHERE vsid=#{vsid};
+    </select>
+
+    <!-- 设置投票信息状态 -->
+    <update id="setVoteSubjectStateByVsid" parameterType="com.xj.votetest.pojo.VoteSubject">
+        UPDATE votesubject set state=#{state} WHERE vsid=#{vsid};
+    </update>
+
+    <!-- 删除投票信息 -->
+    <delete id="deleteSubjectByVsid" parameterType="INTEGER">
+       DELETE FROM votesubject WHERE vsid=#{vsid};
+    </delete>
+    <delete id="deleteOptionsByVsid" parameterType="INTEGER">
+        DELETE FROM voteoption WHERE vsid=#{vsid};
+    </delete>
+    <delete id="deleteItemByVsid" parameterType="INTEGER">
+        DELETE FROM voteitem WHERE vsid=#{vsid};
+    </delete>
+
+    <!-- 获取用户信息 -->
+    <select id="getAllUsers" parameterType="INTEGER" resultType="com.xj.votetest.pojo.VoteUser">
+        SELECT uid, uname, utype FROM voteuser WHERE uid!=#{uid};
+    </select>
+
+    <!--用户管理-->
+    <delete id="deleteUser" parameterType="INTEGER">
+        DELETE FROM voteuser WHERE uid=#{uid};
+    </delete>
+    <select id="getUtypeByUid" parameterType="INTEGER" resultType="INTEGER">
+        SELECT utype FROM voteuser WHERE uid=#{uid};
+     </select>
+    <update id="grantUser" parameterType="INTEGER">
+      UPDATE voteuser SET utype=10 WHERE uid=#{uid};
+    </update>
+
+    <update id="revokeUser" parameterType="INTEGER">
+        UPDATE voteuser SET utype=100 WHERE uid=#{uid};
+    </update>
+
+</mapper>
